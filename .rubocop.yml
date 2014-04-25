@@ -1,0 +1,23 @@
+AllCops:
+  Include:
+    - metadata.rb
+    - '**/Gemfile'
+    - attributes/**/*
+    - libraries/**/*
+    - recipes/**/*
+    - spec/**/*
+  Exclude:
+    - vendor
+
+Encoding:
+  Exclude:
+    - metadata.rb
+
+NumericLiterals:
+  Enabled: false
+
+LineLength:
+  Enabled: false
+
+WordArray:
+  MinSize: 3
