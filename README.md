@@ -1,4 +1,4 @@
-GotCms Cookbook (Work in progress)
+GotCms Cookbook (Work in progress)[![Build Status](https://travis-ci.org/GotCms/cookbook-gotcms.svg?branch=master)](https://travis-ci.org/GotCms/cookbook-gotcms)
 ===============
 TODO: Enter the cookbook description here.
 
