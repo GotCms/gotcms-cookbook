@@ -1,3 +1,6 @@
+# encoding: UTF-8
+# coding: UTF-8
+# -*- coding: UTF-8 -*-
 #
 # Cookbook Name:: gotcms
 # Recipe:: default
@@ -30,7 +33,6 @@ directory node['gotcms']['dir'] do
   action :create
 end
 
-
 archive = 'gotcms.tar.gz'
 
 remote_file "#{Chef::Config[:file_cache_path]}/#{archive}" do
@@ -38,7 +40,7 @@ remote_file "#{Chef::Config[:file_cache_path]}/#{archive}" do
   action :create
 end
 
-execute "extract-gotcms" do
+execute 'extract-gotcms' do
   command "tar xf #{Chef::Config[:file_cache_path]}/#{archive} --strip-components 1 -C #{node['gotcms']['dir']}"
   creates "#{node['gotcms']['dir']}/public/index.php"
 end

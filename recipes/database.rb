@@ -1,3 +1,6 @@
+# encoding: UTF-8
+# coding: UTF-8
+# -*- coding: UTF-8 -*-
 #
 # Cookbook Name:: gotcms
 # Recipe:: database
@@ -32,29 +35,29 @@ else
   include_recipe 'postgresql::client'
 end
 
-if is_localhost? db['host']
+if localhost? db['host']
   connection_info = {
-    :host => 'localhost',
-    :username => 'root',
+    host:     'localhost',
+    username: 'root'
   }
 
   if db['driver'] == 'pdo_mysql'
-    include_recipe "mysql::server"
+    include_recipe 'mysql::server'
 
     connection_info = {
-      :host => 'localhost',
-      :username => 'root',
-      :password => node['mysql']['server_root_password']
+      host:     'localhost',
+      username: 'root',
+      password: node['mysql']['server_root_password']
     }
     provider_user_info = Chef::Provider::Database::MysqlUser
     provider_info = Chef::Provider::Database::Mysql
   else
-    include_recipe "postgresql::server"
+    include_recipe 'postgresql::server'
     connection_info = {
-      :host      => '127.0.0.1',
-      :port      => 5432,
-      :username  => 'postgres',
-      :password  => node['postgresql']['password']['postgres']
+      host:     '127.0.0.1',
+      port:     5432,
+      username: 'postgres',
+      password: node['postgresql']['password']['postgres']
     }
     provider_user_info = Chef::Provider::Database::PostgresqlUser
     provider_info = Chef::Provider::Database::Postgresql
@@ -62,26 +65,26 @@ if is_localhost? db['host']
 
   database db['name'] do
     connection connection_info
-    provider   provider_info
-    action     :create
+    provider provider_info
+    action :create
   end
 
   database_user "create-#{db['username']}" do
-    username      db['username']
-    password      db['password']
-    host          db['host']
+    username db['username']
+    password db['password']
+    host db['host']
     database_name db['name']
-    connection    connection_info
-    provider      provider_user_info
-    action        :create
+    connection connection_info
+    provider provider_user_info
+    action :create
   end
 
   database_user "grant-#{db['username']}" do
-    username      db['username']
+    username db['username']
     database_name db['name']
-    privileges    [:all]
-    connection    connection_info
-    provider      provider_user_info
-    action        :grant
+    privileges [:all]
+    connection connection_info
+    provider provider_user_info
+    action :grant
   end
 end

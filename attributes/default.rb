@@ -1,3 +1,6 @@
+# encoding: UTF-8
+# coding: UTF-8
+# -*- coding: UTF-8 -*-
 #
 # Cookbook Name:: gotcms
 # Attributes:: gotcms

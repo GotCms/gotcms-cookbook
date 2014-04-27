@@ -1,3 +1,6 @@
+# encoding: UTF-8
+# coding: UTF-8
+# -*- coding: UTF-8 -*-
 #
 # Cookbook Name:: gotcms
 # Library:: Helpers
@@ -20,8 +23,9 @@
 #
 
 module GotCms
+  # GotCms Module
   module Helpers
-    def is_localhost?(host)
+    def localhost?(host)
       if host == 'localhost' || host == '127.0.0.1' || host == '::1'
         true
       else
@@ -29,10 +33,6 @@ module GotCms
         require 'resolv'
         Socket.ip_address_list.map { |a| a.ip_address }.include? Resolv.getaddress host
       end
-    end
-
-    def self.make_db_query(user, pass, query)
-      %< --user=#{user} --password="#{pass}" --execute="#{query}">
     end
   end
 end
