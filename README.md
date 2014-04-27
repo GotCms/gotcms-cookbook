@@ -1,24 +1,26 @@
-GotCms Cookbook (Work in progress)[![Build Status](https://travis-ci.org/GotCms/cookbook-gotcms.svg?branch=master)](https://travis-ci.org/GotCms/cookbook-gotcms)
-===============
-TODO: Enter the cookbook description here.
+#GotCms Cookbook (Work in progress)[![Build Status](https://travis-ci.org/GotCms/cookbook-gotcms.svg?branch=master)](https://travis-ci.org/GotCms/cookbook-gotcms)
 
-e.g.
-This cookbook makes your favorite breakfast sandwich.
+The Chef GotCms cookbook installs and configures GotCms.
 
-Requirements
-------------
-TODO: List your cookbook requirements. Be sure to include any requirements this cookbook has on platforms, libraries, other cookbooks, packages, operating systems, etc.
+##Requirements
 
-e.g.
-#### packages
-- `toaster` - gotcms needs toaster to brown your bagel.
+###Platform
 
-Attributes
-----------
-TODO: List your cookbook attributes here.
+* Ubuntu
+* Debian
+* RHEL/CentOS
 
-e.g.
-#### gotcms::default
+###Cookbooks
+
+* apache2
+* database
+* mysql
+* openssl
+* php
+* postgresql
+
+##Attributes
+
 <table>
   <tr>
     <th>Key</th>
@@ -27,19 +29,77 @@ e.g.
     <th>Default</th>
   </tr>
   <tr>
-    <td><tt>['gotcms']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
+    <td><tt>['gotcms']['version']</tt></td>
+    <td>String</td>
+    <td>Version of GotCms to download. Use 'master', to download most recent version.</td>
+    <td><tt>master</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['gotcms']['url']</tt></td>
+    <td>String</td>
+    <td>Url of GotCms to download.</td>
+    <td><tt>https://github.com/GotCms/GotCms/archive/#{node['gotcms']['version']}.tar.gz</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['gotcms']['parent_dir']</tt></td>
+    <td>String</td>
+    <td>Parent directory to where GotCms will be extracted.</td>
+    <td><tt>node['apache']['docroot_dir']</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['gotcms']['dir']</tt></td>
+    <td>String</td>
+    <td>Location to plage GotCms files.</td>
+    <td><tt>#{node['gotcms']['parent_dir']}/gotcms</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['gotcms']['db']['driver']</tt></td>
+    <td>String</td>
+    <td>Driver of the GotCms database (should be pdo_mysql or pdo_pgsql).</td>
+    <td><tt>pdo_mysql</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['gotcms']['db']['username']</tt></td>
+    <td>String</td>
+    <td>Name of the GotCms database user.</td>
+    <td><tt>gotcmsuser</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['gotcms']['db']['password']</tt></td>
+    <td>String</td>
+    <td>Password of the GotCms database user. By default, generated using openssl cookbook.</td>
+    <td><tt>nil</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['gotcms']['db']['name']</tt></td>
+    <td>String</td>
+    <td>Name of the GotCms database.</td>
+    <td><tt>gotcmsdb</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['gotcms']['db']['host']</tt></td>
+    <td>String</td>
+    <td>Host of the GotCms database.</td>
+    <td><tt>localhost</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['gotcms']['server_name']</tt></td>
+    <td>String</td>
+    <td>Server name for apache2 virtualhost.</td>
+    <td><tt>node['fqdn']</tt></td>
+  </tr>
+  <tr>
+    <td><tt>['gotcms']['server_aliases']</tt></td>
+    <td>String</td>
+    <td>Server aliases for apache2 virtualhost.</td>
+    <td><tt>[node['fqdn']]</tt></td>
   </tr>
 </table>
 
-Usage
------
-#### gotcms::default
-TODO: Write usage instructions for each cookbook.
+##Usage
 
-e.g.
+
+#### gotcms::default
 Just include `gotcms` in your node's `run_list`:
 
 ```json
@@ -51,18 +111,15 @@ Just include `gotcms` in your node's `run_list`:
 }
 ```
 
-Contributing
-------------
-TODO: (optional) If this is a public cookbook, detail the process for contributing. If this is a private cookbook, remove this section.
+##Contributing
 
-e.g.
 1. Fork the repository on Github
-2. Create a named feature branch (like `add_component_x`)
+2. Create a named feature branch (like `issue_x`)
 3. Write your change
-4. Write tests for your change (if applicable)
+4. Write tests for your change
 5. Run the tests, ensuring they all pass
 6. Submit a Pull Request using Github
 
-License and Authors
--------------------
-Authors: TODO: List authors
+##License and Authors
+
+* Authors: Pierre Rambaud (pierre.rambaud86@gmail.com)

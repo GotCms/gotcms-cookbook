@@ -24,7 +24,7 @@
 
 default['gotcms']['version'] = 'master'
 default['gotcms']['url'] = "https://github.com/GotCms/GotCms/archive/#{node['gotcms']['version']}.tar.gz"
-default['gotcms']['parent_dir'] = '/var/www'
+default['gotcms']['parent_dir'] = node['apache']['docroot_dir']
 default['gotcms']['dir'] = "#{node['gotcms']['parent_dir']}/gotcms"
 
 default['gotcms']['db']['driver'] = 'pdo_mysql'
