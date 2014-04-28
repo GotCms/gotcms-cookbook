@@ -44,3 +44,12 @@ execute 'extract-gotcms' do
   command "tar xf #{Chef::Config[:file_cache_path]}/#{archive} --strip-components 1 -C #{node['gotcms']['dir']}"
   creates "#{node['gotcms']['dir']}/public/index.php"
 end
+
+['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
+  directory "#{node['gotcms']['dir']}/#{path}" do
+    recursive true
+    mode '775'
+    owner node['apache']['user']
+    group node['apache']['group']
+  end
+end

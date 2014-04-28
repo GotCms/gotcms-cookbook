@@ -22,7 +22,6 @@
 # with GotCms. If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 #
 
-::Chef::Recipe.send(:include, Opscode::OpenSSL::Password)
 ::Chef::Recipe.send(:include, GotCms::Helpers)
 
 db = node['gotcms']['db']

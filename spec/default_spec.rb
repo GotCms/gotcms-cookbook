@@ -33,4 +33,15 @@ describe 'gotcms::default' do
       creates: '/var/www/gotcms/public/index.php'
     )
   end
+
+  ['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
+    it "prepare #{path} directory" do
+      expect(chef_run).to create_directory("/var/www/gotcms/#{path}").with(
+        recursive: true,
+        mode: '775',
+        owner: 'www-data',
+        group: 'www-data'
+      )
+    end
+  end
 end

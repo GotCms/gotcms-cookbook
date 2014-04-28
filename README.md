@@ -15,7 +15,6 @@ The Chef GotCms cookbook installs and configures GotCms.
 * apache2
 * database
 * mysql
-* openssl
 * php
 * postgresql
 
@@ -67,7 +66,7 @@ The Chef GotCms cookbook installs and configures GotCms.
   <tr>
     <td><tt>['gotcms']['db']['password']</tt></td>
     <td>String</td>
-    <td>Password of the GotCms database user. By default, generated using openssl cookbook.</td>
+    <td>Password of the GotCms database user.</td>
     <td><tt>nil</tt></td>
   </tr>
   <tr>
