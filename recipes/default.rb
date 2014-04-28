@@ -53,3 +53,12 @@ end
     group node['apache']['group']
   end
 end
+
+web_app 'gotcms' do
+  template 'gotcms.conf.erb'
+  docroot "#{node['gotcms']['dir']}/public"
+  server_name node['gotcms']['server_name']
+  server_aliases node['gotcms']['server_aliases']
+  server_port node['apache']['listen_ports']
+  enable true
+end

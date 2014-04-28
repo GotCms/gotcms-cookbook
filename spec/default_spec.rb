@@ -44,4 +44,16 @@ describe 'gotcms::default' do
       )
     end
   end
+
+  # Actually can't test definitions
+  # it 'create web app' do
+  #   expect(chef_run).to enable_web_app('gotcms').with(
+  #     template: 'gotcms.conf.erb',
+  #     docroot: '/var/www/gotcms/public',
+  #     server_name: 'gotcms',
+  #     server_aliases: 'gotcms',
+  #     server_port: '80',
+  #     enable: true
+  #   )
+  # end
 end
