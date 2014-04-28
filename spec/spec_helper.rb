@@ -22,7 +22,6 @@ UBUNTU_OPTS = {
   log_level: LOG_LEVEL
 }
 
-
 shared_context 'gotcms_stubs' do
   before do
     stub_command('which php').and_return('/usr/bin/php')
