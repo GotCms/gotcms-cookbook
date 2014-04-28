@@ -5,8 +5,10 @@
 require_relative 'spec_helper'
 
 describe 'gotcms::default' do
-  describe 'Normal execution' do
-    let(:chef_run) { ChefSpec::Runner.new(UBUNTU_OPTS).converge(described_recipe) }
+  include_context 'gotcms_stubs'
+
+  describe 'Normal execution on Redhat' do
+    let(:chef_run) { ChefSpec::Runner.new(REDHAT_OPTS).converge(described_recipe) }
 
     it 'includes recipes' do
       expect(chef_run).to include_recipe('php')
@@ -16,9 +18,9 @@ describe 'gotcms::default' do
     end
 
     it 'create directory' do
-      expect(chef_run).to create_directory('/var/www/gotcms').with(
-        owner: 'www-data',
-        group: 'www-data'
+      expect(chef_run).to create_directory('/var/www/html/gotcms').with(
+        owner: 'apache',
+        group: 'apache'
       )
     end
 
@@ -30,26 +32,26 @@ describe 'gotcms::default' do
 
     it 'extract archive' do
       expect(chef_run).to run_execute('extract-gotcms').with(
-        command: 'tar xf /var/chef/cache/gotcms.tar.gz --strip-components 1 -C /var/www/gotcms',
-        creates: '/var/www/gotcms/public/index.php'
+        command: 'tar xf /var/chef/cache/gotcms.tar.gz --strip-components 1 -C /var/www/html/gotcms',
+        creates: '/var/www/html/gotcms/public/index.php'
       )
     end
 
     ['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
       it "prepare #{path} directory" do
-        expect(chef_run).to create_directory("/var/www/gotcms/#{path}").with(
+        expect(chef_run).to create_directory("/var/www/html/gotcms/#{path}").with(
           recursive: true,
           mode: '775',
-          owner: 'www-data',
-          group: 'www-data'
+          owner: 'apache',
+          group: 'apache'
         )
       end
     end
   end
 
-  describe 'Override attributes' do
+  describe 'Override attributes on Redhat' do
     let(:chef_run) do
-      ChefSpec::Runner.new(UBUNTU_OPTS) do |node|
+      ChefSpec::Runner.new(REDHAT_OPTS) do |node|
         node.set['gotcms']['parent_dir'] = '/home/got'
         node.set['apache']['group'] = 'got'
         node.set['apache']['user'] = 'got'
@@ -99,7 +101,7 @@ describe 'gotcms::default' do
   # it 'create web app' do
   #   expect(chef_run).to enable_web_app('gotcms').with(
   #     template: 'gotcms.conf.erb',
-  #     docroot: '/var/www/gotcms/public',
+  #     docroot: '/var/www/html/gotcms/public',
   #     server_name: 'gotcms',
   #     server_aliases: 'gotcms',
   #     server_port: '80',

@@ -5,8 +5,10 @@
 require_relative 'spec_helper'
 
 describe 'gotcms::database' do
-  describe 'Normal execution' do
-    let(:chef_run) { ChefSpec::Runner.new(UBUNTU_OPTS).converge(described_recipe) }
+  include_context 'gotcms_stubs'
+
+  describe 'Normal execution on Redhat' do
+    let(:chef_run) { ChefSpec::Runner.new(REDHAT_OPTS).converge(described_recipe) }
 
     it 'includes recipes' do
       expect(chef_run).to include_recipe('mysql::client')
@@ -44,9 +46,9 @@ describe 'gotcms::database' do
     end
   end
 
-  describe 'Override attributes' do
+  describe 'Override attributes on Redhat' do
     let(:chef_run) do
-      ChefSpec::Runner.new(UBUNTU_OPTS) do |node|
+      ChefSpec::Runner.new(REDHAT_OPTS) do |node|
         node.set['gotcms']['db']['driver'] = 'pdo_pgsql'
         node.set['gotcms']['db']['host'] = '127.0.0.1'
         node.set['gotcms']['db']['username'] = 'got'
@@ -57,7 +59,7 @@ describe 'gotcms::database' do
 
     it 'includes recipes' do
       expect(chef_run).to include_recipe('postgresql::client')
-      expect(chef_run).to include_recipe('postgresql::server_debian')
+      expect(chef_run).to include_recipe('postgresql::server_redhat')
       expect(chef_run).to include_recipe('php::module_pgsql')
     end
 

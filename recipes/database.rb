@@ -51,7 +51,9 @@ if localhost? db['host']
     provider_user_info = Chef::Provider::Database::MysqlUser
     provider_info = Chef::Provider::Database::Mysql
   else
-    include_recipe 'postgresql::server'
+    include_recipe 'postgresql::server_debian' if platform_family?('debian')
+    include_recipe 'postgresql::server_redhat' if platform_family?('rhel', 'fedora')
+
     connection_info = {
       host:     '127.0.0.1',
       port:     5432,
@@ -68,7 +70,7 @@ if localhost? db['host']
     action :create
   end
 
-  database_user "create-#{db['username']}" do
+  database_user 'create-gotcmsuser' do
     username db['username']
     password db['password']
     host db['host']
@@ -78,7 +80,7 @@ if localhost? db['host']
     action :create
   end
 
-  database_user "grant-#{db['username']}" do
+  database_user 'grant-gotcmsuser' do
     username db['username']
     database_name db['name']
     privileges [:all]
