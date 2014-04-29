@@ -29,6 +29,9 @@ db = node['gotcms']['db']
 if db['driver'] == 'pdo_mysql'
   include_recipe 'mysql::client'
   include_recipe 'php::module_mysql'
+  gem_package 'mysql' do
+    action :install
+  end
 else
   include_recipe 'php::module_pgsql'
   include_recipe 'postgresql::client'

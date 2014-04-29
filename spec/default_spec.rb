@@ -9,6 +9,7 @@ describe 'gotcms::default' do
     let(:chef_run) { ChefSpec::Runner.new(UBUNTU_OPTS).converge(described_recipe) }
 
     it 'includes recipes' do
+      expect(chef_run).to include_recipe('apt')
       expect(chef_run).to include_recipe('php')
       expect(chef_run).to include_recipe('apache2')
       expect(chef_run).to include_recipe('apache2::mod_php5')
@@ -57,6 +58,7 @@ describe 'gotcms::default' do
     end
 
     it 'includes recipes' do
+      expect(chef_run).to include_recipe('apt')
       expect(chef_run).to include_recipe('php')
       expect(chef_run).to include_recipe('apache2')
       expect(chef_run).to include_recipe('apache2::mod_php5')

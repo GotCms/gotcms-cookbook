@@ -1,8 +1,9 @@
 require 'serverspec'
 
-include SpecInfra::Helper::Exec
-include SpecInfra::Helper::DetectOS
+include Serverspec::Helper::Exec
+include Serverspec::Helper::DetectOS
 
 RSpec.configure do |c|
-
+  os = backend(Serverspec::Commands::Base).check_os
+  c.inclusion_patterns = '**/*_' + os[:family].downcase + '_spec.rb'
 end
