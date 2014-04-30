@@ -4,16 +4,16 @@
 #
 require 'spec_helper'
 
-describe file('/etc/apache2/sites-enabled/gotcms.conf') do
+describe file('/etc/httpd/sites-enabled/gotcms.conf') do
   it { should be_file }
 end
 
-describe file('/var/www/gotcms') do
+describe file('/var/www/html/gotcms') do
   it { should be_directory }
   it { should be_mode 775 }
 end
 
-describe service('apache2') do
+describe service('httpd') do
   it { should be_enabled }
   it { should be_running }
 end
