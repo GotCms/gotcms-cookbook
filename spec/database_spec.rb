@@ -21,6 +21,7 @@ describe 'gotcms::database' do
     }
 
     it 'create database' do
+      expect(chef_run).to install_gem_package('mysql')
       expect(chef_run).to create_database('gotcmsdb').with(
         connection: connection_info
       )

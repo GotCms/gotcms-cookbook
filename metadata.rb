@@ -8,6 +8,7 @@ version '0.1.0'
 
 recipe 'gotcms', 'Installs and configures GotCms LAMP stack on a single system'
 
+depends 'apt'
 depends 'apache2'
 depends 'database'
 depends 'mysql'

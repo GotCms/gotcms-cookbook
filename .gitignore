@@ -9,3 +9,5 @@ Gemfile.lock
 Vagrantfile
 vendor
 cookbooks
+.kitchen/
+.kitchen.local.yml

@@ -22,6 +22,7 @@
 # with GotCms. If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 #
 
+include_recipe 'apt'
 include_recipe 'php'
 include_recipe 'apache2'
 include_recipe 'apache2::mod_php5'
