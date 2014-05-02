@@ -29,12 +29,10 @@ db = node['gotcms']['db']
 if db['driver'] == 'pdo_mysql'
   include_recipe 'mysql::client'
   include_recipe 'php::module_mysql'
-  gem_package 'mysql' do
-    action :install
-  end
+  include_recipe 'database::mysql'
 else
   include_recipe 'php::module_pgsql'
-  include_recipe 'postgresql::client'
+  include_recipe 'database::postgresql'
 end
 
 if localhost? db['host']
@@ -54,8 +52,7 @@ if localhost? db['host']
     provider_user_info = Chef::Provider::Database::MysqlUser
     provider_info = Chef::Provider::Database::Mysql
   else
-    include_recipe 'postgresql::server_debian' if platform_family?('debian')
-    include_recipe 'postgresql::server_redhat' if platform_family?('rhel', 'fedora')
+    include_recipe 'postgresql::server'
 
     connection_info = {
       host:     '127.0.0.1',
