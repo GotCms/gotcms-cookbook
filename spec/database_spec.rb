@@ -21,7 +21,6 @@ describe 'gotcms::database' do
     }
 
     it 'create database' do
-      expect(chef_run).to install_gem_package('mysql')
       expect(chef_run).to create_database('gotcmsdb').with(
         connection: connection_info
       )
@@ -58,7 +57,7 @@ describe 'gotcms::database' do
 
     it 'includes recipes' do
       expect(chef_run).to include_recipe('postgresql::client')
-      expect(chef_run).to include_recipe('postgresql::server_debian')
+      expect(chef_run).to include_recipe('postgresql::server')
       expect(chef_run).to include_recipe('php::module_pgsql')
     end
 

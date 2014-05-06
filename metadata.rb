@@ -10,6 +10,7 @@ recipe 'gotcms', 'Installs and configures GotCms LAMP stack on a single system'
 
 depends 'apt'
 depends 'apache2'
+depends 'build-essential'
 depends 'database'
 depends 'mysql'
 depends 'php'

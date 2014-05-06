@@ -59,7 +59,7 @@ describe 'gotcms::database' do
 
     it 'includes recipes' do
       expect(chef_run).to include_recipe('postgresql::client')
-      expect(chef_run).to include_recipe('postgresql::server_redhat')
+      expect(chef_run).to include_recipe('postgresql::server')
       expect(chef_run).to include_recipe('php::module_pgsql')
     end
 
