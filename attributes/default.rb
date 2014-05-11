@@ -36,4 +36,13 @@ default['gotcms']['db']['host'] = 'localhost'
 default['gotcms']['server_name'] = node['fqdn']
 default['gotcms']['server_aliases'] = [node['fqdn']]
 
-default['gotcms']['language'] = 'en_GB'
+default['gotcms']['config']['language'] = 'en_GB'
+default['gotcms']['config']['website_name'] = 'GotCms'
+default['gotcms']['config']['is_offline'] = false
+default['gotcms']['config']['admin_email'] = 'demo@got-cms.com'
+default['gotcms']['config']['admin_firstname'] = 'GotCms'
+default['gotcms']['config']['admin_lastname'] = 'GotCms'
+default['gotcms']['config']['admin_login'] = 'demo'
+default['gotcms']['config']['admin_password'] = 'demo'
+default['gotcms']['config']['admin_password_confirm'] = 'demo'
+default['gotcms']['config']['template'] = 'arcana'

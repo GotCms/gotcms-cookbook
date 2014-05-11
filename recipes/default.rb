@@ -28,17 +28,18 @@ include_recipe 'apache2'
 include_recipe 'apache2::mod_php5'
 include_recipe 'gotcms::database'
 
+archive = 'gotcms.tar.gz'
+
 directory node['gotcms']['dir'] do
   owner node['apache']['user']
   group node['apache']['group']
+  recursive true
   action :create
 end
 
-archive = 'gotcms.tar.gz'
-
 remote_file "#{Chef::Config[:file_cache_path]}/#{archive}" do
   source node['gotcms']['url']
-  action :create
+  action :create_if_missing
 end
 
 execute 'extract-gotcms' do
@@ -46,12 +47,13 @@ execute 'extract-gotcms' do
   creates "#{node['gotcms']['dir']}/public/index.php"
 end
 
-['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
-  directory "#{node['gotcms']['dir']}/#{path}" do
-    recursive true
-    mode '775'
-    owner node['apache']['user']
-    group node['apache']['group']
+execute 'recursively changing mod/owner' do
+  command "chown -R #{node['apache']['user']}:#{node['apache']['group']} #{node['gotcms']['dir']}"
+end
+
+%w(config/autoload public/frontend public/media data/cache templates).each do |path|
+  execute "#{node['gotcms']['dir']}/#{path}" do
+    command "chown -R #{node['apache']['user']}:#{node['apache']['group']} #{node['gotcms']['dir']}/#{path}"
   end
 end
 
@@ -62,4 +64,17 @@ web_app 'gotcms' do
   server_aliases node['gotcms']['server_aliases']
   server_port node['apache']['listen_ports']
   enable true
+end
+
+ruby_block 'edit /etc/hosts' do
+  block do
+    rc = Chef::Util::FileEdit.new("/etc/hosts")
+    rc.search_file_replace_line(/^127\.0\.0\.1 localhost$/,
+       "127.0.0.1 #{node['gotcms']['server_name']} #{node['gotcms']['server_aliases']} localhost")
+    rc.write_file
+  end
+end
+
+unless node['gotcms']['config'].nil?
+  include_recipe 'gotcms::install'
 end
