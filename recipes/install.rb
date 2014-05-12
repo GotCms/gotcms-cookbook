@@ -23,12 +23,12 @@
 #
 
 install_url = "http://#{node['gotcms']['server_name']}/install"
-headers_value = {'Cookie' => 'PHPSESSID=installgotcms', 'Content-Type' => 'application/x-www-form-urlencoded'}
+headers_value = { 'Cookie' => 'PHPSESSID=installgotcms', 'Content-Type' => 'application/x-www-form-urlencoded' }
 config = node['gotcms']['config']
 db = node['gotcms']['db']
 
 begin
-  data = URI.encode_www_form({'lang' => config['language']})
+  data = URI.encode_www_form('lang' => config['language'])
   Chef::Log.info("Load url #{install_url} with #{data} params")
   http_request 'lang' do
     url install_url
@@ -36,11 +36,12 @@ begin
     headers headers_value
     action :post
   end
-rescue
+rescue Exceptions::InvalidRedirect => e
+  handle_error(e)
 end
 
 begin
-  data = URI.encode_www_form({'accept-license' => 1})
+  data = URI.encode_www_form('accept-license' => 1)
   Chef::Log.info("Load url #{install_url}/license with #{data} params")
   http_request 'license' do
     url "#{install_url}/license"
@@ -48,7 +49,8 @@ begin
     headers headers_value
     action :post
   end
-rescue
+rescue Exceptions::InvalidRedirect => e
+  handle_error(e)
 end
 
 begin
@@ -58,17 +60,18 @@ begin
     headers headers_value
     action :post
   end
-rescue
+rescue Exceptions::InvalidRedirect => e
+  handle_error(e)
 end
 
 begin
-  data = URI.encode_www_form({
+  data = URI.encode_www_form(
     'dbname' => db['name'],
     'driver' => db['driver'],
     'hostname' => db['host'],
     'password' => db['password'],
     'username' => db['username']
-  })
+  )
   Chef::Log.info("Load url #{install_url}/database-configuration with #{data} params")
   http_request 'check-database' do
     url "#{install_url}/database-configuration"
@@ -76,11 +79,12 @@ begin
     headers headers_value
     action :post
   end
-rescue
+rescue Exceptions::InvalidRedirect => e
+  handle_error(e)
 end
 
 begin
-  data = URI.encode_www_form({
+  data = URI.encode_www_form(
     'admin_email' => config['admin_email'],
     'admin_firstname' => config['admin_firstname'],
     'admin_lastname' => config['admin_lastname'],
@@ -90,7 +94,7 @@ begin
     'admin_password_confirm' => config['admin_password'],
     'site_name' => config['website_name'],
     'template' => config['template']
-  })
+  )
   Chef::Log.info("Load url #{install_url}/configuration with #{data} params")
   http_request 'configure' do
     url "#{install_url}/configuration"
@@ -98,7 +102,8 @@ begin
     headers headers_value
     action :post
   end
-rescue
+rescue Exceptions::InvalidRedirect => e
+  handle_error(e)
 end
 
 headers_value['X-Requested-With'] = 'XMLHttpRequest'
@@ -106,11 +111,11 @@ headers_value['X-Requested-With'] = 'XMLHttpRequest'
   begin
     http_request "complete-step-#{step}" do
       url "#{install_url}/complete"
-      message URI.encode_www_form({'step' => step})
+      message URI.encode_www_form('step' => step)
       headers headers_value
       action :post
     end
-  rescue Exceptions::InvalidRedirect
-  ensure
+  rescue Exceptions::InvalidRedirect => e
+    handle_error(e)
   end
 end

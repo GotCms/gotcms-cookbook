@@ -68,13 +68,13 @@ end
 
 ruby_block 'edit /etc/hosts' do
   block do
-    rc = Chef::Util::FileEdit.new("/etc/hosts")
-    rc.search_file_replace_line(/^127\.0\.0\.1 localhost$/,
-       "127.0.0.1 #{node['gotcms']['server_name']} #{node['gotcms']['server_aliases']} localhost")
+    rc = Chef::Util::FileEdit.new('/etc/hosts')
+    rc.search_file_replace_line(
+      /^127\.0\.0\.1 localhost$/,
+      "127.0.0.1 #{node['gotcms']['server_name']} #{node['gotcms']['server_aliases']} localhost"
+    )
     rc.write_file
   end
 end
 
-unless node['gotcms']['config'].nil?
-  include_recipe 'gotcms::install'
-end
+include_recipe 'gotcms::install' unless node['gotcms']['config'].nil?
