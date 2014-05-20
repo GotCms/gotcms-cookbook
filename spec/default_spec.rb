@@ -36,12 +36,16 @@ describe 'gotcms::default' do
       )
     end
 
-    ['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
+    ['config/autoload', 'public/frontend', 'public/media', 'data/cache', 'templates'].each do |path|
       it "prepare #{path} directory" do
         expect(chef_run).to run_execute("/var/www/gotcms/#{path}").with(
           command: "chown -R www-data:www-data /var/www/gotcms/#{path}"
         )
       end
+    end
+
+    it 'changes /etc/hosts' do
+      expect(chef_run).to run_ruby_block('edit /etc/hosts')
     end
   end
 
@@ -82,7 +86,7 @@ describe 'gotcms::default' do
       )
     end
 
-    ['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
+    ['config/autoload', 'public/frontend', 'public/media', 'data/cache', 'templates'].each do |path|
       it "prepare #{path} directory" do
         expect(chef_run).to run_execute("/home/got/gotcms/#{path}").with(
           command: "chown -R got:got /home/got/gotcms/#{path}"

@@ -24,7 +24,78 @@
 
 module Gotcms
   # GotCms Module
-  class HTTP < Chef::HTTP
+  class HTTP < ::Chef::HTTP
+
+    # Send an HTTP HEAD request to the path
+    #
+    # === Parameters
+    # path:: path part of the request URL
+    def head(path, headers={}, options={})
+      request(:HEAD, path, headers, options)
+    end
+
+    # Send an HTTP GET request to the path
+    #
+    # === Parameters
+    # path:: The path to GET
+    def get(path, headers={}, options={})
+      request(:GET, path, headers, options)
+    end
+
+    # Send an HTTP PUT request to the path
+    #
+    # === Parameters
+    # path:: path part of the request URL
+    def put(path, json, headers={}, options={})
+      request(:PUT, path, headers, options, json)
+    end
+
+    # Send an HTTP POST request to the path
+    #
+    # === Parameters
+    # path:: path part of the request URL
+    def post(path, json, headers={}, options={})
+      request(:POST, path, headers, options, json)
+    end
+
+    # Send an HTTP DELETE request to the path
+    #
+    # === Parameters
+    # path:: path part of the request URL
+    def delete(path, headers={}, options={})
+      request(:DELETE, path, headers, options)
+    end
+
+    # Makes an HTTP request to +path+ with the given +method+, +headers+, and
+    # +data+ (if applicable).
+    def request(method, path, headers={}, options={}, data=false)
+      url = create_url(path)
+      method, url, headers, data = apply_request_middleware(method, url, headers, data)
+
+      response, rest_request, return_value, redirect_location = send_http_request(method, url, headers, data)
+      if options.key?('should_redirect')
+        if redirect_location != options['should_redirect']
+          raise Chef::Exceptions::InvalidRedirect, "#{method} request was redirected from #{url} to #{redirect_location} instead of #{options['should_redirect']}."
+        end
+      end
+
+      if options.key?('should_contains')
+        if return_value =~ /"#{options['should_contains']}"/
+          raise ArgumentError, "Response should contains : \"#{options['should_contains']}\", but only contains #{return_value}"
+        end
+      end
+
+      response, rest_request, return_value = apply_response_middleware(response, rest_request, return_value)
+      response.error! unless success_response?(response)
+      return_value
+    rescue Exception => exception
+      log_failed_request(response, return_value) unless response.nil?
+
+      if exception.respond_to?(:chef_rest_request=)
+        exception.chef_rest_request = rest_request
+      end
+      raise
+    end
 
     # Runs a synchronous HTTP request, with no middleware applied (use #request
     # to have the middleware applied). The entire response will be loaded into memory.
@@ -46,6 +117,14 @@ module Gotcms
           [response, request, return_value]
         elsif response.kind_of?(Net::HTTPNotModified) # Must be tested before Net::HTTPRedirection because it's subclass.
           [response, request, false]
+        elsif redirect_location = redirected_to(response)
+          if [:GET, :HEAD].include?(method)
+            follow_redirect do
+              send_http_request(method, create_url(redirect_location), headers, body, &response_handler)
+            end
+          else
+            [response, request, return_value, redirect_location]
+          end
         else
           [response, request, nil]
         end

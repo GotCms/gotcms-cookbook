@@ -3,7 +3,7 @@
 # -*- coding: UTF-8 -*-
 #
 # Cookbook Name:: gotcms
-# Recipe:: default
+# Recipe:: install
 #
 # Author:: Pierre Rambaud (<pierre.rambaud86@gmail.com>)
 # Copyright 2014
@@ -33,7 +33,7 @@ gotcms_request 'lang' do
   url install_url
   message data
   headers headers_value
-  should_redirect "#{install_url}/license"
+  should_redirect "/install/license"
   action :post
 end
 
@@ -43,7 +43,7 @@ gotcms_request 'license' do
   url "#{install_url}/license"
   message data
   headers headers_value
-  should_redirect "#{install_url}/check-server-configuration"
+  should_redirect "/install/check-server-configuration"
   action :post
 end
 
@@ -66,7 +66,7 @@ gotcms_request 'check-database' do
   url "#{install_url}/database-configuration"
   message data
   headers headers_value
-  should_redirect "#{install_url}/configuration"
+  should_redirect "/install/configuration"
   action :post
 end
 
@@ -86,7 +86,7 @@ gotcms_request 'configure' do
   url "#{install_url}/configuration"
   message data
   headers headers_value
-  should_redirect "#{install_url}/complete"
+  should_redirect "/install/complete"
   action :post
 end
 
@@ -96,7 +96,7 @@ headers_value['X-Requested-With'] = 'XMLHttpRequest'
     url "#{install_url}/complete"
     message URI.encode_www_form('step' => step)
     headers headers_value
-    should_contains 'success: true'
+    should_contains '"success":true'
     action :post
   end
 end
