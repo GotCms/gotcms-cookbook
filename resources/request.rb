@@ -24,11 +24,11 @@
 
 actions :get, :put, :post, :delete, :head, :options
 
-attribute :url, :kind_of => String, :required => true
-attribute :headers, :kind_of => Hash
-attribute :should_redirect, :kind_of => String
-attribute :should_contains, :kind_of => [String, Hash]
-attribute :message, :kind_of => Object
+attribute :url, kind_of: String, required: true
+attribute :headers, kind_of: Hash
+attribute :should_redirect, kind_of: String
+attribute :should_contains, kind_of: [String, Hash]
+attribute :message, kind_of: Object
 
 def initialize(name, run_context = nil)
   super

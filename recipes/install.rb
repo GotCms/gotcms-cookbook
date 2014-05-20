@@ -33,7 +33,7 @@ gotcms_request 'lang' do
   url install_url
   message data
   headers headers_value
-  should_redirect "/install/license"
+  should_redirect '/install/license'
   action :post
 end
 
@@ -43,7 +43,7 @@ gotcms_request 'license' do
   url "#{install_url}/license"
   message data
   headers headers_value
-  should_redirect "/install/check-server-configuration"
+  should_redirect '/install/check-server-configuration'
   action :post
 end
 
@@ -66,7 +66,7 @@ gotcms_request 'check-database' do
   url "#{install_url}/database-configuration"
   message data
   headers headers_value
-  should_redirect "/install/configuration"
+  should_redirect '/install/configuration'
   action :post
 end
 
@@ -86,7 +86,7 @@ gotcms_request 'configure' do
   url "#{install_url}/configuration"
   message data
   headers headers_value
-  should_redirect "/install/complete"
+  should_redirect '/install/complete'
   action :post
 end
 

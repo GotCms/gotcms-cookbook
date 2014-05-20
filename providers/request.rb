@@ -1,6 +1,7 @@
 # encoding: UTF-8
 # coding: UTF-8
 # -*- coding: UTF-8 -*-
+# IgnoreMultilineLiterals
 #
 # Cookbook Name:: gotcms
 # Provider:: Request
@@ -23,7 +24,6 @@
 #
 require 'tempfile'
 
-http = nil
 attr_accessor :http
 
 def whyrun_supported?
@@ -114,10 +114,9 @@ def check_message(message)
   end
 end
 
-
 def load_options
   options = {}
-  options['should_redirect'] = @new_resource.should_redirect unless @new_resource.should_redirect == nil
-  options['should_contains'] = @new_resource.should_contains unless @new_resource.should_contains == nil
+  options['should_redirect'] = @new_resource.should_redirect unless @new_resource.should_redirect.nil?
+  options['should_contains'] = @new_resource.should_contains unless @new_resource.should_contains.nil?
   options
 end
