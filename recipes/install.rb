@@ -91,12 +91,20 @@ gotcms_request 'configure' do
 end
 
 headers_value['X-Requested-With'] = 'XMLHttpRequest'
-%w(c-db i-d i-t c-uar it c-cf).each do |step|
+%w(c-db i-d i-t c-uar it).each do |step|
   gotcms_request "complete-step-#{step}" do
     url "#{install_url}/complete"
     message URI.encode_www_form('step' => step)
     headers headers_value
-    should_contains '"success":true'
+    should_contains /"success":true/
     action :post
   end
+end
+
+gotcms_request 'complete-step-c-cf' do
+  url "#{install_url}/complete"
+  message URI.encode_www_form('step' => 'c-cf')
+  headers headers_value
+  should_contains /"message":/
+  action :post
 end

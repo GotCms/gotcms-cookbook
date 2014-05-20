@@ -30,7 +30,7 @@ module Gotcms
     #
     # === Parameters
     # path:: path part of the request URL
-    def head(path, headers={}, options={})
+    def head(path, headers = {}, options = {})
       request(:HEAD, path, headers, options)
     end
 
@@ -38,7 +38,7 @@ module Gotcms
     #
     # === Parameters
     # path:: The path to GET
-    def get(path, headers={}, options={})
+    def get(path, headers = {}, options = {})
       request(:GET, path, headers, options)
     end
 
@@ -46,7 +46,7 @@ module Gotcms
     #
     # === Parameters
     # path:: path part of the request URL
-    def put(path, json, headers={}, options={})
+    def put(path, json, headers = {}, options = {})
       request(:PUT, path, headers, options, json)
     end
 
@@ -54,7 +54,7 @@ module Gotcms
     #
     # === Parameters
     # path:: path part of the request URL
-    def post(path, json, headers={}, options={})
+    def post(path, json, headers = {}, options = {})
       request(:POST, path, headers, options, json)
     end
 
@@ -62,26 +62,32 @@ module Gotcms
     #
     # === Parameters
     # path:: path part of the request URL
-    def delete(path, headers={}, options={})
+    def delete(path, headers = {}, options = {})
       request(:DELETE, path, headers, options)
     end
 
     # Makes an HTTP request to +path+ with the given +method+, +headers+, and
     # +data+ (if applicable).
-    def request(method, path, headers={}, options={}, data=false)
+    def request(method, path, headers = {}, options = {}, data=false)
       url = create_url(path)
       method, url, headers, data = apply_request_middleware(method, url, headers, data)
 
       response, rest_request, return_value, redirect_location = send_http_request(method, url, headers, data)
       if options.key?('should_redirect')
         if redirect_location != options['should_redirect']
-          raise Chef::Exceptions::InvalidRedirect, "#{method} request was redirected from #{url} to #{redirect_location} instead of #{options['should_redirect']}."
+          fail Chef::Exceptions::InvalidRedirect, "#{method} request was redirected from #{url} to #{redirect_location} instead of #{options['should_redirect']}."
         end
       end
 
       if options.key?('should_contains')
-        if return_value =~ /"#{options['should_contains']}"/
-          raise ArgumentError, "Response should contains : \"#{options['should_contains']}\", but only contains #{return_value}"
+        if options['should_contains'].class != 'Array'
+          options['should_contains'] = [options['should_contains']]
+        end
+
+        options['should_contains'].each do |content|
+          if (content.class == String && return_value != content) || (content.class == Regexp && return_value !~ content)
+            fail ArgumentError, "Response should contains: \"#{options['should_contains']}\", but only contains #{return_value}"
+          end
         end
       end
 
