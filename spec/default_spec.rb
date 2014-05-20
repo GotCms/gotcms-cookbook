@@ -24,7 +24,7 @@ describe 'gotcms::default' do
     end
 
     it 'download archive' do
-      expect(chef_run).to create_remote_file('/var/chef/cache/gotcms.tar.gz').with(
+      expect(chef_run).to create_remote_file_if_missing('/var/chef/cache/gotcms.tar.gz').with(
         source: 'https://github.com/GotCms/GotCms/archive/master.tar.gz'
       )
     end
@@ -36,15 +36,16 @@ describe 'gotcms::default' do
       )
     end
 
-    ['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
+    ['config/autoload', 'public/frontend', 'public/media', 'data/cache', 'templates'].each do |path|
       it "prepare #{path} directory" do
-        expect(chef_run).to create_directory("/var/www/gotcms/#{path}").with(
-          recursive: true,
-          mode: '775',
-          owner: 'www-data',
-          group: 'www-data'
+        expect(chef_run).to run_execute("/var/www/gotcms/#{path}").with(
+          command: "chown -R www-data:www-data /var/www/gotcms/#{path}"
         )
       end
+    end
+
+    it 'changes /etc/hosts' do
+      expect(chef_run).to run_ruby_block('edit /etc/hosts')
     end
   end
 
@@ -73,7 +74,7 @@ describe 'gotcms::default' do
     end
 
     it 'download archive' do
-      expect(chef_run).to create_remote_file('/var/chef/cache/gotcms.tar.gz').with(
+      expect(chef_run).to create_remote_file_if_missing('/var/chef/cache/gotcms.tar.gz').with(
         source: 'https://github.com/GotCms/GotCms/archive/master.tar.gz'
       )
     end
@@ -85,27 +86,12 @@ describe 'gotcms::default' do
       )
     end
 
-    ['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
+    ['config/autoload', 'public/frontend', 'public/media', 'data/cache', 'templates'].each do |path|
       it "prepare #{path} directory" do
-        expect(chef_run).to create_directory("/home/got/gotcms/#{path}").with(
-          recursive: true,
-          mode: '775',
-          owner: 'got',
-          group: 'got'
+        expect(chef_run).to run_execute("/home/got/gotcms/#{path}").with(
+          command: "chown -R got:got /home/got/gotcms/#{path}"
         )
       end
     end
   end
-
-  # Actually can't test definitions
-  # it 'create web app' do
-  #   expect(chef_run).to enable_web_app('gotcms').with(
-  #     template: 'gotcms.conf.erb',
-  #     docroot: '/var/www/gotcms/public',
-  #     server_name: 'gotcms',
-  #     server_aliases: 'gotcms',
-  #     server_port: '80',
-  #     enable: true
-  #   )
-  # end
 end
