@@ -29,6 +29,12 @@ describe 'gotcms::default' do
       )
     end
 
+    it 'change mod/owner' do
+      expect(chef_run).to run_execute('recursively changing mod/owner').with(
+        command: 'chown -R www-data:www-data /var/www/gotcms',
+      )
+    end
+
     it 'extract archive' do
       expect(chef_run).to run_execute('extract-gotcms').with(
         command: 'tar xf /var/chef/cache/gotcms.tar.gz --strip-components 1 -C /var/www/gotcms',
@@ -76,6 +82,12 @@ describe 'gotcms::default' do
     it 'download archive' do
       expect(chef_run).to create_remote_file_if_missing('/var/chef/cache/gotcms.tar.gz').with(
         source: 'https://github.com/GotCms/GotCms/archive/master.tar.gz'
+      )
+    end
+
+    it 'change mod/owner' do
+      expect(chef_run).to run_execute('recursively changing mod/owner').with(
+        command: 'chown -R got:got /home/got/gotcms',
       )
     end
 

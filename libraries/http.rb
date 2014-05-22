@@ -3,7 +3,7 @@
 # -*- coding: UTF-8 -*-
 #
 # Cookbook Name:: gotcms
-# Library:: Helpers
+# Library:: HTTP
 #
 # Author:: Pierre Rambaud (<pierre.rambaud86@gmail.com>)
 # Copyright 2014
@@ -25,7 +25,6 @@
 module Gotcms
   # GotCms Module
   class HTTP < ::Chef::HTTP
-
     # Send an HTTP HEAD request to the path
     #
     # === Parameters
@@ -68,7 +67,7 @@ module Gotcms
 
     # Makes an HTTP request to +path+ with the given +method+, +headers+, and
     # +data+ (if applicable).
-    def request(method, path, headers = {}, options = {}, data=false)
+    def request(method, path, headers = {}, options = {}, data = false)
       url = create_url(path)
       method, url, headers, data = apply_request_middleware(method, url, headers, data)
 
@@ -94,7 +93,7 @@ module Gotcms
       response, rest_request, return_value = apply_response_middleware(response, rest_request, return_value)
       response.error! unless success_response?(response)
       return_value
-    rescue Exception => exception
+    rescue => exception
       log_failed_request(response, return_value) unless response.nil?
 
       if exception.respond_to?(:chef_rest_request=)
@@ -114,16 +113,17 @@ module Gotcms
         if block_given?
           request, response = client.request(method, url, body, headers, &response_handler)
         else
-          request, response = client.request(method, url, body, headers) {|r| r.read_body }
+          request, response = client.request(method, url, body, headers) { |r| r.read_body }
           return_value = response.read_body
         end
         @last_response = response
 
+        redirect_location = redirected_to(response)
         if response.kind_of?(Net::HTTPSuccess)
           [response, request, return_value]
         elsif response.kind_of?(Net::HTTPNotModified) # Must be tested before Net::HTTPRedirection because it's subclass.
           [response, request, false]
-        elsif redirect_location = redirected_to(response)
+        elsif redirect_location
           if [:GET, :HEAD].include?(method)
             follow_redirect do
               send_http_request(method, create_url(redirect_location), headers, body, &response_handler)

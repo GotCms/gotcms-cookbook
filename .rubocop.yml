@@ -3,6 +3,8 @@ AllCops:
     - metadata.rb
     - '**/Gemfile'
     - attributes/**/*
+    - providers/**/*
+    - resources/**/*
     - libraries/**/*
     - recipes/**/*
     - spec/**/*
@@ -23,3 +25,15 @@ LineLength:
 
 WordArray:
   MinSize: 3
+
+CyclomaticComplexity:
+  Exclude:
+    - libraries/**/*
+    - providers/**/*
+    - resources/**/*
+
+MethodLength:
+  Exclude:
+    - libraries/**/*
+    - providers/**/*
+    - resources/**/*

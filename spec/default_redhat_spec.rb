@@ -38,7 +38,13 @@ describe 'gotcms::default' do
       )
     end
 
-    ['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
+    it 'change mod/owner' do
+      expect(chef_run).to run_execute('recursively changing mod/owner').with(
+        command: 'chown -R apache:apache /var/www/html/gotcms',
+      )
+    end
+
+    ['config/autoload', 'public/frontend', 'public/media', 'data/cache', 'templates'].each do |path|
       it "prepare #{path} directory" do
         expect(chef_run).to run_execute("/var/www/html/gotcms/#{path}").with(
           command: "chown -R apache:apache /var/www/html/gotcms/#{path}"
@@ -77,6 +83,12 @@ describe 'gotcms::default' do
       )
     end
 
+    it 'change mod/owner' do
+      expect(chef_run).to run_execute('recursively changing mod/owner').with(
+        command: 'chown -R got:got /home/got/gotcms',
+      )
+    end
+
     it 'extract archive' do
       expect(chef_run).to run_execute('extract-gotcms').with(
         command: 'tar xf /var/chef/cache/gotcms.tar.gz --strip-components 1 -C /home/got/gotcms',
@@ -84,7 +96,7 @@ describe 'gotcms::default' do
       )
     end
 
-    ['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
+    ['config/autoload', 'public/frontend', 'public/media', 'data/cache', 'templates'].each do |path|
       it "prepare #{path} directory" do
         expect(chef_run).to run_execute("/home/got/gotcms/#{path}").with(
           command: "chown -R got:got /home/got/gotcms/#{path}"
