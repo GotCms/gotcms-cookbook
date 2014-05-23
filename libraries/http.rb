@@ -84,9 +84,8 @@ module Gotcms
         end
 
         options['should_contains'].each do |content|
-          if (content.class == String && return_value != content) || (content.class == Regexp && return_value !~ content)
-            fail ArgumentError, "Response should contains: \"#{options['should_contains']}\", but only contains #{return_value}"
-          end
+          next unless (content.class == String && return_value != content) || (content.class == Regexp && return_value !~ content)
+          fail ArgumentError, "Response should contains: \"#{options['should_contains']}\", but only contains #{return_value}"
         end
       end
 

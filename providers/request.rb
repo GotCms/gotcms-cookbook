@@ -46,9 +46,8 @@ def action_head
   Chef::Log.info("#{@new_resource} HEAD to #{@new_resource.url} successful")
   Chef::Log.debug("#{@new_resource} HEAD request response: #{modified}")
   # :head is usually used to trigger notifications, which converge_by now does
-  if modified != false
-    converge_by("#{@new_resource} HEAD to #{@new_resource.url} returned modified, trigger notifications") {}
-  end
+
+  return converge_by("#{@new_resource} HEAD to #{@new_resource.url} returned modified, trigger notifications") {} unless  modified != false
 end
 
 # Send a GET request to @new_resource.url, with ?message=@new_resource.message

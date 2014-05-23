@@ -70,7 +70,6 @@ describe 'gotcms::install' do
         node.set['gotcms']['config']['admin_lastname'] = 'Got'
         node.set['gotcms']['config']['admin_login'] = 'pierre'
         node.set['gotcms']['config']['admin_password'] = 'rambaud'
-        node.set['gotcms']['config']['admin_password_confirm'] = 'rambaud'
         node.set['gotcms']['config']['template'] = 'silverblog'
       end.converge(described_recipe)
     end

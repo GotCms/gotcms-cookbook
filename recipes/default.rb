@@ -57,15 +57,6 @@ end
   end
 end
 
-web_app 'gotcms' do
-  template 'gotcms.conf.erb'
-  docroot "#{node['gotcms']['dir']}/public"
-  server_name node['gotcms']['server_name']
-  server_aliases node['gotcms']['server_aliases']
-  server_port node['apache']['listen_ports']
-  enable true
-end
-
 ruby_block 'edit /etc/hosts' do
   block do
     rc = Chef::Util::FileEdit.new('/etc/hosts')
@@ -75,6 +66,19 @@ ruby_block 'edit /etc/hosts' do
     )
     rc.write_file
   end
+end
+
+web_app 'gotcms' do
+  template 'gotcms.conf.erb'
+  docroot "#{node['gotcms']['dir']}/public"
+  server_name node['gotcms']['server_name']
+  server_aliases node['gotcms']['server_aliases']
+  server_port node['apache']['listen_ports']
+  enable true
+end
+
+service 'apache2' do
+  action :reload
 end
 
 include_recipe 'gotcms::install' unless node['gotcms']['config'].nil?
