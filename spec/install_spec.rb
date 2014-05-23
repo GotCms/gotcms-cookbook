@@ -12,7 +12,7 @@ describe 'gotcms::install' do
       expect(chef_run).to post_gotcms_request('lang').with(
         url: 'http://fauxhai.local/install',
         message: 'lang=en_GB',
-        headers: {"Cookie"=>"PHPSESSID=installgotcms", "Content-Type"=>"application/x-www-form-urlencoded", "X-Requested-With"=>"XMLHttpRequest"},
+        headers: { 'Cookie' => 'PHPSESSID=installgotcms', 'Content-Type' => 'application/x-www-form-urlencoded' },
         should_redirect: '/install/license'
       )
     end
@@ -29,7 +29,7 @@ describe 'gotcms::install' do
       expect(chef_run).to post_gotcms_request('lang').with(
         url: 'http://fauxhai.local/install',
         message: 'lang=fr_FR',
-        headers: {"Cookie"=>"PHPSESSID=installgotcms", "Content-Type"=>"application/x-www-form-urlencoded", "X-Requested-With"=>"XMLHttpRequest"},
+        headers: { 'Cookie' => 'PHPSESSID=installgotcms', 'Content-Type' => 'application/x-www-form-urlencoded' },
         should_redirect: '/install/license'
       )
     end

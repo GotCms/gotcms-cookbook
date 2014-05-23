@@ -40,7 +40,7 @@ describe 'gotcms::default' do
 
     it 'change mod/owner' do
       expect(chef_run).to run_execute('recursively changing mod/owner').with(
-        command: 'chown -R apache:apache /var/www/html/gotcms',
+        command: 'chown -R apache:apache /var/www/html/gotcms'
       )
     end
 
@@ -85,7 +85,7 @@ describe 'gotcms::default' do
 
     it 'change mod/owner' do
       expect(chef_run).to run_execute('recursively changing mod/owner').with(
-        command: 'chown -R got:got /home/got/gotcms',
+        command: 'chown -R got:got /home/got/gotcms'
       )
     end
 

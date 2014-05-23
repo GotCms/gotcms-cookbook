@@ -90,12 +90,13 @@ gotcms_request 'configure' do
   action :post
 end
 
-headers_value['X-Requested-With'] = 'XMLHttpRequest'
+ajax_headers = headers_value.clone
+ajax_headers['X-Requested-With'] = 'XMLHttpRequest'
 %w(c-db i-d i-t c-uar it).each do |step|
   gotcms_request "complete-step-#{step}" do
     url "#{install_url}/complete"
     message URI.encode_www_form('step' => step)
-    headers headers_value
+    headers ajax_headers
     should_contains(/"success":true/)
     action :post
   end
