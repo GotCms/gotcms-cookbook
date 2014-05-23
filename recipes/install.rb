@@ -51,6 +51,7 @@ Chef::Log.info("Load url #{install_url}/check-server-configuration")
 gotcms_request 'check-config' do
   url "#{install_url}/check-server-configuration"
   headers headers_value
+  should_redirect '/install/database-configuration'
   action :post
 end
 
@@ -105,7 +106,7 @@ end
 gotcms_request 'complete-step-c-cf' do
   url "#{install_url}/complete"
   message URI.encode_www_form('step' => 'c-cf')
-  headers headers_value
+  headers ajax_headers
   should_contains(/"message":/)
   action :post
 end

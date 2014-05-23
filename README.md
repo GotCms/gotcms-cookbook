@@ -1,4 +1,4 @@
-#GotCms Cookbook (Work in progress)[![Build Status](https://travis-ci.org/GotCms/gotcms-cookbook.svg?branch=master)](https://travis-ci.org/GotCms/cookbook-gotcms)
+#GotCms Cookbook (Work in progress)[![Build Status](https://travis-ci.org/GotCms/gotcms-cookbook.svg?branch=master)](https://travis-ci.org/GotCms/gotcms-cookbook)
 
 The Chef GotCms cookbook installs and configures GotCms.
 
