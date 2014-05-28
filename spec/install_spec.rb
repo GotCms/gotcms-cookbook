@@ -38,7 +38,7 @@ describe 'gotcms::install' do
     it 'send http post to check database configuration' do
       expect(chef_run).to post_gotcms_request('check-database').with(
         url: 'http://fauxhai.local/install/database-configuration',
-        message: 'dbname=gotcmsdb&driver=pdo_mysql&hostname=localhost&password&username=gotcmsuser',
+        message: 'dbname=gotcmsdb&driver=pdo_mysql&hostname=localhost&password=gotcmspassword&username=gotcmsuser',
         headers: { 'Cookie' => 'PHPSESSID=installgotcms', 'Content-Type' => 'application/x-www-form-urlencoded' },
         should_redirect: '/install/configuration'
       )

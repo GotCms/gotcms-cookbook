@@ -28,14 +28,6 @@ config = node['gotcms']['config']
 db = node['gotcms']['db']
 
 data = URI.encode_www_form('lang' => config['language'])
-Chef::Log.info("Load url #{install_url}")
-gotcms_request 'initialize' do
-  url install_url
-  message data
-  headers headers_value
-  action :post
-end
-
 Chef::Log.info("Load url #{install_url} with #{data} params")
 gotcms_request 'lang' do
   url install_url

@@ -29,7 +29,7 @@ default['gotcms']['dir'] = "#{node['gotcms']['parent_dir']}/gotcms"
 
 default['gotcms']['db']['driver'] = 'pdo_mysql'
 default['gotcms']['db']['username'] = 'gotcmsuser'
-default['gotcms']['db']['password'] = nil
+default['gotcms']['db']['password'] = 'gotcmspassword'
 default['gotcms']['db']['name'] = 'gotcmsdb'
 default['gotcms']['db']['host'] = 'localhost'
 

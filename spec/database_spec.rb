@@ -29,7 +29,7 @@ describe 'gotcms::database' do
     it 'create user' do
       expect(chef_run).to create_database_user('create-gotcmsuser').with(
         username:      'gotcmsuser',
-        password:      nil,
+        password:      'gotcmspassword',
         host:          'localhost',
         database_name: 'gotcmsdb',
         connection:    connection_info
