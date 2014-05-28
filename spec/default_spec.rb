@@ -14,6 +14,11 @@ describe 'gotcms::default' do
       expect(chef_run).to include_recipe('apache2')
       expect(chef_run).to include_recipe('apache2::mod_php5')
       expect(chef_run).to include_recipe('gotcms::database')
+      expect(chef_run).to include_recipe('gotcms::install')
+    end
+
+    it 'reload apache2' do
+      expect(chef_run).to reload_service('apache2')
     end
 
     it 'create directory' do
