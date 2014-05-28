@@ -1,10 +1,12 @@
-#GotCms Cookbook (Work in progress)[![Build Status](https://travis-ci.org/GotCms/gotcms-cookbook.svg?branch=master)](https://travis-ci.org/GotCms/gotcms-cookbook)
+#GotCms Cookbook [![Build Status](https://travis-ci.org/GotCms/gotcms-cookbook.svg?branch=master)](https://travis-ci.org/GotCms/gotcms-cookbook)
 
 The Chef GotCms cookbook installs and configures GotCms.
 
 ##Requirements
 
 ###Platform
+
+Requires PHP 5.3.23 or later, we recommend using the latest PHP version whenever possible. So a recent linux distribution ;)
 
 * Ubuntu
 * Debian
@@ -69,7 +71,7 @@ The Chef GotCms cookbook installs and configures GotCms.
     <td><tt>gotcms['db']['password']</tt></td>
     <td>String</td>
     <td>Password of the GotCms database user.</td>
-    <td><tt>nil</tt></td>
+    <td><tt>gotcmspassword</tt></td>
   </tr>
   <tr>
     <td><tt>gotcms['db']['name']</tt></td>
