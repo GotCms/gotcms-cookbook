@@ -81,4 +81,4 @@ service 'apache2' do
   action :reload
 end
 
-include_recipe 'gotcms::install' unless node['gotcms']['config'].nil?
+include_recipe 'gotcms::install' unless node['gotcms']['config'].nil? || ::File.exist?("#{node['gotcms']['dir']}/config/autoload/local.php")
