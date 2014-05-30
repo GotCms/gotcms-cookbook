@@ -57,15 +57,10 @@ end
   end
 end
 
-ruby_block 'edit /etc/hosts' do
-  block do
-    rc = Chef::Util::FileEdit.new('/etc/hosts')
-    rc.search_file_replace_line(
-      /^127\.0\.0\.1 localhost$/,
-      "127.0.0.1 #{node['gotcms']['server_name']} #{node['gotcms']['server_aliases']} localhost"
-    )
-    rc.write_file
-  end
+hostsfile_entry '127.0.0.1' do
+  hostname node['gotcms']['server_name']
+  aliases node['gotcms']['server_aliases']
+  action :create
 end
 
 web_app 'gotcms' do

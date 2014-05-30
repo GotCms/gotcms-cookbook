@@ -56,7 +56,10 @@ describe 'gotcms::default' do
     end
 
     it 'changes /etc/hosts' do
-      expect(chef_run).to run_ruby_block('edit /etc/hosts')
+      expect(chef_run).to create_hostsfile_entry('127.0.0.1').with(
+        hostname: 'fauxhai.local',
+        aliases: ['fauxhai.local']
+      )
     end
   end
 
@@ -64,6 +67,7 @@ describe 'gotcms::default' do
     let(:chef_run) do
       ChefSpec::Runner.new(UBUNTU_OPTS) do |node|
         node.set['gotcms']['parent_dir'] = '/home/got'
+        node.set['gotcms']['server_name'] = 'got-cms.com'
         node.set['apache']['group'] = 'got'
         node.set['apache']['user'] = 'got'
       end.converge(described_recipe)
@@ -109,6 +113,13 @@ describe 'gotcms::default' do
           command: "chown -R got:got /home/got/gotcms/#{path}"
         )
       end
+    end
+
+    it 'changes /etc/hosts' do
+      expect(chef_run).to create_hostsfile_entry('127.0.0.1').with(
+        hostname: 'got-cms.com',
+        aliases: ['fauxhai.local']
+      )
     end
   end
 end
