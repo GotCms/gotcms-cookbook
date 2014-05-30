@@ -82,6 +82,7 @@ if localhost? db['host']
 
   database_user 'grant-gotcmsuser' do
     username db['username']
+    password db['password']
     database_name db['name']
     privileges [:all]
     connection connection_info

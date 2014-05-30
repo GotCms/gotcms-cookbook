@@ -39,6 +39,7 @@ describe 'gotcms::database' do
 
       expect(chef_run).to grant_database_user('grant-gotcmsuser').with(
         username:      'gotcmsuser',
+        password:      'gotcmspassword',
         database_name: 'gotcmsdb',
         privileges:    [:all],
         connection:    connection_info
@@ -87,6 +88,7 @@ describe 'gotcms::database' do
 
       expect(chef_run).to grant_database_user('grant-gotcmsuser').with(
         username:      'got',
+        password:      'mypassword',
         database_name: 'gotcmsdb',
         privileges:    [:all],
         connection:    connection_info
