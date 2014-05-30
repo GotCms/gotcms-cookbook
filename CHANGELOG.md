@@ -3,9 +3,14 @@ gotcms CHANGELOG
 
 This file is used to list changes made in each version of the gotcms cookbook.
 
+0.1.1
+-----
+- Fix missing password for grant_database_user
+
+
 0.1.0
 -----
-- [your_name] - Initial release of gotcms
+- Initial release of gotcms
 
 - - -
 Check the [Markdown Syntax Guide](http://daringfireball.net/projects/markdown/syntax) for help with Markdown.
