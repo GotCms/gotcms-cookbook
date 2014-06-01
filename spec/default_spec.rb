@@ -17,6 +17,10 @@ describe 'gotcms::default' do
       expect(chef_run).to include_recipe('gotcms::install')
     end
 
+    it 'install php extensions' do
+      expect(chef_run).to install_package('php5-gd')
+    end
+
     it 'reload apache2' do
       expect(chef_run).to reload_service('apache2')
     end

@@ -18,6 +18,10 @@ describe 'gotcms::default' do
       expect(chef_run).to include_recipe('gotcms::database')
     end
 
+    it 'install php extensions' do
+      expect(chef_run).to install_package('php-gd')
+    end
+
     it 'create directory' do
       expect(chef_run).to create_directory('/var/www/html/gotcms').with(
         owner: 'apache',

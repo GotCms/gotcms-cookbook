@@ -23,10 +23,22 @@
 #
 
 include_recipe 'apt'
-include_recipe 'php'
 include_recipe 'apache2'
 include_recipe 'apache2::mod_php5'
+include_recipe 'php'
 include_recipe 'gotcms::database'
+
+pkg = value_for_platform(
+  %w(centos redhat scientific fedora amazon oracle) => {
+    el5_range => 'php53-gd',
+    'default' => 'php-gd'
+  },
+  'default' => 'php5-gd'
+)
+
+package pkg do
+  action :install
+end
 
 archive = 'gotcms.tar.gz'
 
