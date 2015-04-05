@@ -23,7 +23,8 @@
 #
 
 install_url = "http://#{node['gotcms']['server_name']}/install"
-headers_value = { 'Cookie' => 'PHPSESSID=installgotcms', 'Content-Type' => 'application/x-www-form-urlencoded' }
+headers_value = { 'Cookie' => 'PHPSESSID=installgotcms',
+                  'Content-Type' => 'application/x-www-form-urlencoded' }
 config = node['gotcms']['config']
 db = node['gotcms']['db']
 
@@ -62,7 +63,8 @@ data = URI.encode_www_form(
   'password' => db['password'],
   'username' => db['username']
 )
-Chef::Log.info("Load url #{install_url}/database-configuration with #{data} params")
+Chef::Log
+  .info("Load url #{install_url}/database-configuration with #{data} params")
 gotcms_request 'check-database' do
   url "#{install_url}/database-configuration"
   message data

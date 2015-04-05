@@ -69,12 +69,21 @@ module Gotcms
     # +data+ (if applicable).
     def request(method, path, headers = {}, options = {}, data = false)
       url = create_url(path)
-      method, url, headers, data = apply_request_middleware(method, url, headers, data)
+      method,
+      url,
+      headers,
+      data = apply_request_middleware(method, url, headers, data)
 
-      response, rest_request, return_value, redirect_location = send_http_request(method, url, headers, data)
+      response,
+      rest_request,
+      return_value,
+      redirect_location = send_http_request(method, url, headers, data)
       if options.key?('should_redirect')
         if redirect_location != options['should_redirect']
-          fail Chef::Exceptions::InvalidRedirect, "#{method} request was redirected from #{url} to #{redirect_location} instead of #{options['should_redirect']}."
+          fail(Chef::Exceptions::InvalidRedirect,
+               "#{method} request was redirected from '#{url}' to " \
+               "'#{redirect_location}' instead of " \
+               "'#{options['should_redirect']}'.")
         end
       end
 
@@ -84,12 +93,19 @@ module Gotcms
         end
 
         options['should_contains'].each do |content|
-          next unless (content.class == String && return_value != content) || (content.class == Regexp && return_value !~ content)
-          fail ArgumentError, "Response should contains: \"#{options['should_contains']}\", but only contains #{return_value}"
+          next unless (content.is_a?(String) && return_value != content) ||
+                      (content.is_a?(Regexp) && return_value !~ content)
+          fail ArgumentError, 'Response should contains: ' \
+          "\"#{options['should_contains']}\", "\
+          "but only contains #{return_value}"
         end
       end
 
-      response, rest_request, return_value = apply_response_middleware(response, rest_request, return_value)
+      response,
+      rest_request,
+      return_value = apply_response_middleware(response,
+                                               rest_request,
+                                               return_value)
       response.error! unless success_response?(response)
       return_value
     rescue => exception
@@ -102,7 +118,8 @@ module Gotcms
     end
 
     # Runs a synchronous HTTP request, with no middleware applied (use #request
-    # to have the middleware applied). The entire response will be loaded into memory.
+    # to have the middleware applied). The entire response will be
+    # loaded into memory.
     def send_http_request(method, url, headers, body, &response_handler)
       headers = build_headers(method, url, headers, body)
 
@@ -110,28 +127,39 @@ module Gotcms
         client = http_client(url)
         return_value = nil
         if block_given?
-          request, response = client.request(method, url, body, headers, &response_handler)
+          request, response = client.request(method,
+                                             url,
+                                             body,
+                                             headers,
+                                             &response_handler)
         else
-          request, response = client.request(method, url, body, headers) { |r| r.read_body }
+          request, response = client.request(method, url, body, headers) do |r|
+            r.read_body
+          end
           return_value = response.read_body
         end
         @last_response = response
 
         redirect_location = redirected_to(response)
-        if response.kind_of?(Net::HTTPSuccess)
-          [response, request, return_value]
-        elsif response.kind_of?(Net::HTTPNotModified) # Must be tested before Net::HTTPRedirection because it's subclass.
-          [response, request, false]
+        if response.is_a?(Net::HTTPSuccess)
+          return [response, request, return_value]
+        elsif response.is_a?(Net::HTTPNotModified)
+          # Must be tested before Net::HTTPRedirection because it's subclass.
+          return [response, request, false]
         elsif redirect_location
           if [:GET, :HEAD].include?(method)
             follow_redirect do
-              send_http_request(method, create_url(redirect_location), headers, body, &response_handler)
+              send_http_request(method,
+                                create_url(redirect_location),
+                                headers,
+                                body,
+                                &response_handler)
             end
           else
-            [response, request, return_value, redirect_location]
+            return [response, request, return_value, redirect_location]
           end
         else
-          [response, request, nil]
+          return [response, request, nil, redirect_location]
         end
       end
     end

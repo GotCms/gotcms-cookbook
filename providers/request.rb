@@ -37,8 +37,8 @@ end
 # Send a HEAD request to @new_resource.url, with ?message=@new_resource.message
 def action_head
   message = check_message(@new_resource.message)
-  # CHEF-4762: we expect a nil return value from Chef::HTTP for a "200 Success" response
-  # and false for a "304 Not Modified" response
+  # CHEF-4762: we expect a nil return value from Chef::HTTP for a "200 Success"
+  # response and false for a "304 Not Modified" response
   modified = @http.head(
     "#{@new_resource.url}?message=#{message}",
     @new_resource.headers
@@ -47,7 +47,9 @@ def action_head
   Chef::Log.debug("#{@new_resource} HEAD request response: #{modified}")
   # :head is usually used to trigger notifications, which converge_by now does
 
-  return converge_by("#{@new_resource} HEAD to #{@new_resource.url} returned modified, trigger notifications") {} unless  modified != false
+  return converge_by("#{@new_resource} HEAD to #{@new_resource.url} " \
+                     'returned modified, trigger notifications') {} unless
+    modified != false
 end
 
 # Send a GET request to @new_resource.url, with ?message=@new_resource.message
@@ -87,7 +89,8 @@ def action_post
       @new_resource.headers,
       load_options
     )
-    Chef::Log.info("#{@new_resource} POST to #{@new_resource.url} message: #{message.inspect} successful")
+    Chef::Log.info("#{@new_resource} POST to #{@new_resource.url}" \
+                   " message: #{message.inspect} successful")
     Chef::Log.debug("#{@new_resource} POST request response: #{body}")
   end
 end
@@ -106,7 +109,7 @@ def action_delete
 end
 
 def check_message(message)
-  if message.kind_of?(Proc)
+  if message.is_a?(Proc)
     message.call
   else
     message
@@ -115,7 +118,9 @@ end
 
 def load_options
   options = {}
-  options['should_redirect'] = @new_resource.should_redirect unless @new_resource.should_redirect.nil?
-  options['should_contains'] = @new_resource.should_contains unless @new_resource.should_contains.nil?
+  options['should_redirect'] = @new_resource.should_redirect unless
+    @new_resource.should_redirect.nil?
+  options['should_contains'] = @new_resource.should_contains unless
+    @new_resource.should_contains.nil?
   options
 end

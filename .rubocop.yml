@@ -7,10 +7,11 @@ AllCops:
     - resources/**/*
     - libraries/**/*
     - recipes/**/*
-    - spec/**/*
+    - spec/**/*.rb
   Exclude:
     - cookbooks/**/*
     - vendor/**/*
+    - test/**/*
 
 Encoding:
   Exclude:
@@ -20,13 +21,22 @@ Encoding:
 NumericLiterals:
   Enabled: false
 
-LineLength:
-  Enabled: false
-
 WordArray:
   MinSize: 3
 
 CyclomaticComplexity:
+  Exclude:
+    - libraries/**/*
+    - providers/**/*
+    - resources/**/*
+
+AbcSize:
+  Exclude:
+    - libraries/**/*
+    - providers/**/*
+    - resources/**/*
+
+Metrics/PerceivedComplexity:
   Exclude:
     - libraries/**/*
     - providers/**/*

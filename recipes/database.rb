@@ -27,30 +27,51 @@
 db = node['gotcms']['db']
 
 if db['driver'] == 'pdo_mysql'
-  include_recipe 'mysql::client'
+  mysql_client 'default' do
+    action :create
+  end
   include_recipe 'php::module_mysql'
-  include_recipe 'database::mysql'
 else
   include_recipe 'php::module_pgsql'
   include_recipe 'database::postgresql'
 end
 
 if localhost? db['host']
-  connection_info = {
-    host:     'localhost',
-    username: 'root'
-  }
-
   if db['driver'] == 'pdo_mysql'
-    include_recipe 'mysql::server'
+    mysql_service 'default' do
+      initial_root_password node['gotcms']['mysql']['server_root_password']
+      action [:create, :start]
+    end
 
     connection_info = {
-      host:     'localhost',
+      host:     '127.0.0.1',
       username: 'root',
-      password: node['mysql']['server_root_password']
+      password: node['gotcms']['mysql']['server_root_password'],
+      socket:   '/var/run/mysql-default/mysqld.sock'
     }
-    provider_user_info = Chef::Provider::Database::MysqlUser
-    provider_info = Chef::Provider::Database::Mysql
+
+    mysql_database db['name'] do
+      connection connection_info
+      action :create
+    end
+
+    mysql_database_user 'create-gotcmsuser' do
+      username db['username']
+      password db['password']
+      host db['host']
+      database_name db['name']
+      connection connection_info
+      action :create
+    end
+
+    mysql_database_user 'grant-gotcmsuser' do
+      username db['username']
+      password db['password']
+      database_name db['name']
+      privileges [:all]
+      connection connection_info
+      action :grant
+    end
   else
     include_recipe 'postgresql::server'
 
@@ -60,33 +81,28 @@ if localhost? db['host']
       username: 'postgres',
       password: node['postgresql']['password']['postgres']
     }
-    provider_user_info = Chef::Provider::Database::PostgresqlUser
-    provider_info = Chef::Provider::Database::Postgresql
-  end
 
-  database db['name'] do
-    connection connection_info
-    provider provider_info
-    action :create
-  end
+    postgresql_database db['name'] do
+      connection connection_info
+      action :create
+    end
 
-  database_user 'create-gotcmsuser' do
-    username db['username']
-    password db['password']
-    host db['host']
-    database_name db['name']
-    connection connection_info
-    provider provider_user_info
-    action :create
-  end
+    postgresql_database_user 'create-gotcmsuser' do
+      username db['username']
+      password db['password']
+      host db['host']
+      database_name db['name']
+      connection connection_info
+      action :create
+    end
 
-  database_user 'grant-gotcmsuser' do
-    username db['username']
-    password db['password']
-    database_name db['name']
-    privileges [:all]
-    connection connection_info
-    provider provider_user_info
-    action :grant
+    postgresql_database_user 'grant-gotcmsuser' do
+      username db['username']
+      password db['password']
+      database_name db['name']
+      privileges [:all]
+      connection connection_info
+      action :grant
+    end
   end
 end

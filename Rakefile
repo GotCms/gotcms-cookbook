@@ -3,7 +3,7 @@
 # -*- coding: UTF-8 -*-
 #
 # Cookbook Name:: gotcms
-# Library:: Helpers
+# Library:: HTTP
 #
 # Author:: Pierre Rambaud (<pierre.rambaud86@gmail.com>)
 # Copyright 2014
@@ -22,17 +22,33 @@
 # with GotCms. If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 #
 
-module GotCms
-  # GotCms Module
-  module Helpers
-    def localhost?(host)
-      if host == 'localhost' || host == '127.0.0.1' || host == '::1'
-        true
-      else
-        require 'socket'
-        require 'resolv'
-        Socket.ip_address_list.map(&:ip_address).include? Resolv.getaddress host
-      end
-    end
-  end
+def bundle_exec(command)
+  sh "bundle exec #{command}"
 end
+
+task :checkstyle do
+  Rake::Task['foodcritic'].invoke
+  Rake::Task['rubocop'].invoke
+end
+
+task :specs do
+  Rake::Task['chefspec'].invoke
+end
+
+task :foodcritic do
+  bundle_exec 'foodcritic -f any .'
+end
+
+task :rubocop do
+  bundle_exec :rubocop
+end
+
+task :chefspec do
+  bundle_exec 'rspec spec --color --format documentation'
+end
+
+task :kitchen do
+  bundle_exec 'kitchen test'
+end
+
+task default: ['checkstyle', 'specs']

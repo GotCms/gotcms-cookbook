@@ -22,8 +22,13 @@
 # with GotCms. If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 #
 
+mysql2_chef_gem 'default' do
+  action :install
+end
+
 include_recipe 'apt'
 include_recipe 'apache2'
+include_recipe 'apache2::mpm_prefork' if node['platform_family'] == 'debian'
 include_recipe 'apache2::mod_php5'
 include_recipe 'php'
 include_recipe 'gotcms::database'
@@ -55,24 +60,20 @@ remote_file "#{Chef::Config[:file_cache_path]}/#{archive}" do
 end
 
 execute 'extract-gotcms' do
-  command "tar xf #{Chef::Config[:file_cache_path]}/#{archive} --strip-components 1 -C #{node['gotcms']['dir']}"
+  command("tar xf #{Chef::Config[:file_cache_path]}/#{archive} " \
+          "--strip-components 1 -C #{node['gotcms']['dir']}")
   creates "#{node['gotcms']['dir']}/public/index.php"
 end
 
 execute 'recursively changing mod/owner' do
-  command "chown -R #{node['apache']['user']}:#{node['apache']['group']} #{node['gotcms']['dir']}"
-end
-
-%w(config/autoload public/frontend public/media data/cache templates).each do |path|
-  execute "#{node['gotcms']['dir']}/#{path}" do
-    command "chown -R #{node['apache']['user']}:#{node['apache']['group']} #{node['gotcms']['dir']}/#{path}"
-  end
+  command("chown -R #{node['apache']['user']}:#{node['apache']['group']}" \
+          " #{node['gotcms']['dir']}")
 end
 
 hostsfile_entry '127.0.0.1' do
   hostname node['gotcms']['server_name']
   aliases node['gotcms']['server_aliases']
-  action :create
+  action :append
 end
 
 web_app 'gotcms' do
@@ -85,7 +86,9 @@ web_app 'gotcms' do
 end
 
 service 'apache2' do
-  action :reload
+  action :restart
 end
 
-include_recipe 'gotcms::install' unless node['gotcms']['config'].nil? || ::File.exist?("#{node['gotcms']['dir']}/config/autoload/local.php")
+config_file = "#{node['gotcms']['dir']}/config/autoload/local.php"
+include_recipe 'gotcms::install' unless node['gotcms']['config'].nil? ||
+                                        ::File.exist?(config_file)

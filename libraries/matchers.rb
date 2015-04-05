@@ -24,22 +24,27 @@
 #
 if defined?(ChefSpec)
   def post_gotcms_request(resource_name)
-    ChefSpec::Matchers::ResourceMatcher.new(:gotcms_request, :post, resource_name)
+    ChefSpec::Matchers::ResourceMatcher
+      .new(:gotcms_request, :post, resource_name)
   end
 
   def get_gotcms_request(resource_name)
-    ChefSpec::Matchers::ResourceMatcher.new(:gotcms_request, :get, resource_name)
+    ChefSpec::Matchers::ResourceMatcher
+      .new(:gotcms_request, :get, resource_name)
   end
 
   def head_gotcms_request(resource_name)
-    ChefSpec::Matchers::ResourceMatcher.new(:gotcms_request, :head, resource_name)
+    ChefSpec::Matchers::ResourceMatcher
+      .new(:gotcms_request, :head, resource_name)
   end
 
   def delete_gotcms_request(resource_name)
-    ChefSpec::Matchers::ResourceMatcher.new(:gotcms_request, :delete, resource_name)
+    ChefSpec::Matchers::ResourceMatcher
+      .new(:gotcms_request, :delete, resource_name)
   end
 
   def put_gotcms_request(resource_name)
-    ChefSpec::Matchers::ResourceMatcher.new(:gotcms_request, :put, resource_name)
+    ChefSpec::Matchers::ResourceMatcher
+      .new(:gotcms_request, :put, resource_name)
   end
 end

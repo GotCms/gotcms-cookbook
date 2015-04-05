@@ -21,6 +21,9 @@
 # You should have received a copy of the GNU Lesser General Public License along
 # with GotCms. If not, see <http://www.gnu.org/licenses/lgpl-3.0.html>.
 #
+# rubocop:disable LineLength
+
+override['apt']['compile_time_update'] = true
 
 default['gotcms']['version'] = 'master'
 default['gotcms']['url'] = "https://github.com/GotCms/GotCms/archive/#{node['gotcms']['version']}.tar.gz"
@@ -31,7 +34,7 @@ default['gotcms']['db']['driver'] = 'pdo_mysql'
 default['gotcms']['db']['username'] = 'gotcmsuser'
 default['gotcms']['db']['password'] = 'gotcmspassword'
 default['gotcms']['db']['name'] = 'gotcmsdb'
-default['gotcms']['db']['host'] = 'localhost'
+default['gotcms']['db']['host'] = '127.0.0.1'
 
 default['gotcms']['server_name'] = node['fqdn']
 default['gotcms']['server_aliases'] = [node['fqdn']]
@@ -45,3 +48,5 @@ default['gotcms']['config']['admin_lastname'] = 'GotCms'
 default['gotcms']['config']['admin_login'] = 'demo'
 default['gotcms']['config']['admin_password'] = 'demo'
 default['gotcms']['config']['template'] = 'arcana'
+
+default['gotcms']['mysql']['server_root_password'] = 'change me'
