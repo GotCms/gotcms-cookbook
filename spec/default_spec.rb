@@ -30,7 +30,7 @@ describe 'gotcms::default' do
     end
 
     it 'create directory' do
-      expect(chef_run).to create_directory('/var/www/html/gotcms')
+      expect(chef_run).to create_directory('/var/www/gotcms')
         .with(owner: 'www-data',
               group: 'www-data')
     end
@@ -43,14 +43,14 @@ describe 'gotcms::default' do
 
     it 'change mod/owner' do
       expect(chef_run).to run_execute('recursively changing mod/owner')
-        .with(command: 'chown -R www-data:www-data /var/www/html/gotcms')
+        .with(command: 'chown -R www-data:www-data /var/www/gotcms')
     end
 
     it 'extract archive' do
       expect(chef_run).to run_execute('extract-gotcms')
         .with(command: 'tar xf /var/chef/cache/gotcms.tar.gz' \
-              ' --strip-components 1 -C /var/www/html/gotcms',
-              creates: '/var/www/html/gotcms/public/index.php')
+              ' --strip-components 1 -C /var/www/gotcms',
+              creates: '/var/www/gotcms/public/index.php')
     end
 
     it 'changes /etc/hosts' do
