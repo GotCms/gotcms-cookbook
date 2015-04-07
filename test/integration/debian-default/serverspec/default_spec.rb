@@ -8,12 +8,12 @@ describe file('/etc/apache2/sites-enabled/gotcms.conf') do
   it { should be_file }
 end
 
-describe file('/var/www/gotcms') do
+describe file('/var/www/html/gotcms') do
   it { should be_directory }
 end
 
 ['config/autoload', 'public/frontend', 'public/media', 'data/cache'].each do |path|
-  describe file('/var/www/gotcms/' + path) do
+  describe file('/var/www/html/gotcms/' + path) do
     it { should be_directory }
     it { should be_mode 775 }
   end

@@ -29,8 +29,16 @@ end
 include_recipe 'apt'
 include_recipe 'apache2'
 include_recipe 'apache2::mpm_prefork' if node['platform_family'] == 'debian'
-include_recipe 'apache2::mod_php5'
 include_recipe 'php'
+include_recipe 'apache2::mod_php5'
+
+execute 'remove-other-vhosts-access-log' do
+  command 'a2disconf other-vhosts-access-log'
+  cwd '/etc/apache2'
+  user 'root'
+  notifies :restart, 'service[apache2]', :delayed
+end
+
 include_recipe 'gotcms::database'
 
 pkg = value_for_platform(
@@ -86,6 +94,7 @@ web_app 'gotcms' do
 end
 
 service 'apache2' do
+  ignore_failure true
   action :restart
 end
 
