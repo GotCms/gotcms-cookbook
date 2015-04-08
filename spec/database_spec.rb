@@ -84,8 +84,7 @@ describe 'gotcms::database' do
               password:      'mypassword',
               host:          '127.0.0.1',
               database_name: 'gotcmsdb',
-              connection:    connection_info
-              )
+              connection:    connection_info)
 
       expect(chef_run).to grant_postgresql_database_user('grant-gotcmsuser')
         .with(username:      'got',
